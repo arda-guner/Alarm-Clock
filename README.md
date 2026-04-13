@@ -128,8 +128,4 @@ alarm_clock/
 
 ---
 
-## References
 
-- [Nexys A7 Reference Manual](https://digilent.com/reference/programmable-logic/nexys-a7/reference-manual)
-- [Nexys A7-50T Master XDC](https://github.com/Digilent/digilent-xdc/blob/master/Nexys-A7-50T-Master.xdc)
-- Vivado 2025.2 Design Suite User Guide
