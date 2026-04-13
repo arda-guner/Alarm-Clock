@@ -24,13 +24,7 @@ When the alarm time is reached, the buzzer sounds and the LEDs light up.
 
 ## Module Hierarchy (Block Diagram)
 
-```
-alarm_clock_top.v
-├── clk_en.v          -- 100 MHz → 1 Hz clock enable
-├── debouncer.v ×3    -- Button debounce (BTNU, BTND, BTNC)
-├── alarm_clock_top   -- Time counters, alarm registers, FSM (internal)
-└── display_driver.v  -- 8-digit 7-segment multiplexer
-```
+![Diagram](images/Block Diagram of Alarm Clock.png)
 
 ### Top-Level Inputs / Outputs
 
