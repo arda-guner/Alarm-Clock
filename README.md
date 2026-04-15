@@ -128,7 +128,7 @@ alarm_clock/
 
 ---
 Design source clk_en.v
-'''verilog
+```verilog
 
 // clk_en.v
 // Generates a 1-cycle-wide enable pulse at 1Hz from 100MHz clock
@@ -155,4 +155,4 @@ module clk_en (
     end
 
 endmodule
-
+```
