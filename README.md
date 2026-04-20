@@ -167,6 +167,7 @@ module clk_en_tb;
     initial $monitor("t=%0t  ena=%b", $time, ena);
 endmodule
 ```
+![Block_diagram](images/clk_en_tb.png)
  2) debouncer.v
 ```verilog
 // debouncer.v
@@ -202,7 +203,7 @@ module debouncer (
     end
 endmodule
 ```
-![Block_diagram](images/clk_en_tb.png)
+
 debouncer_tb.v
 ```verilog
 `timescale 1ns/1ps
