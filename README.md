@@ -202,6 +202,7 @@ module debouncer (
     end
 endmodule
 ```
+![Stimulation](images/clk_en_tb.png)
 debouncer_tb.v
 ```verilog
 `timescale 1ns/1ps
