@@ -113,7 +113,8 @@ alarm_clock/
 ```
 
 ---
-Design source clk_en.v
+## Design sources and testbenches
+ 1) clk_en.v
 ```verilog
 
 // clk_en.v
@@ -142,7 +143,6 @@ module clk_en (
 
 endmodule
 ```
-
 clk_en_tb.v
 ```verilog
 // clk_en_tb.v
