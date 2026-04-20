@@ -108,22 +108,8 @@ set_property -dict { PACKAGE_PIN K15 IOSTANDARD LVCMOS33 } [get_ports { LED[1] }
 ```
 alarm_clock/
 ├── README.md
-├── src/
-│   ├── alarm_clock_top.v
-│   ├── clk_en.v
-│   ├── debouncer.v
-│   └── display_driver.v
-├── sim/
-│   ├── tb_clk_en.v
-│   ├── tb_debouncer.v
-│   └── tb_display_driver.v
-├── constraints/
-│   └── alarm_clock.xdc
-├── docs/
-│   ├── block_diagram.png
-│   └── resource_report.txt
-└── vivado/
-    └── alarm_clock.xpr
+├── images/
+│   └── Block_Diagram.png
 ```
 
 ---
