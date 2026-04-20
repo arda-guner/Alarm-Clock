@@ -24,7 +24,7 @@ When the alarm time is reached, the buzzer sounds and the LEDs light up.
 
 ## Module Hierarchy (Block Diagram)
 
-![State diagrams](images/Block_Diagram.png)
+![Block Diagram](images/Block_Diagram.png)
 
 ### Top-Level Inputs / Outputs
 
