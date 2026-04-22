@@ -258,6 +258,7 @@ module debouncer_tb;
     initial $monitor("t=%0t  btn_in=%b  btn_out=%b", $time, btn_in, btn_out);
 endmodule
 ```
+![Block_diagram](images/debouncer_simulation.png)
 3) alarm_clock_top.v
 ```verilog
 // alarm_clock_top.v
