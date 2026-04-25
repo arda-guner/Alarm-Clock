@@ -110,6 +110,21 @@ alarm_clock/
 ├── README.md
 ├── images/
 │   └── Block_Diagram.png
+│   └──alarm_clock_top_simulation.png
+│   └──clk_en_tb.png
+│   └──debouncer_simulation.png
+│   └──display_driver.png
+├── src/
+│   └── alarm_clock_top.v
+│   └── clk_en.v
+│   └── debouncer.v
+│   └── display_driver.v
+│   └── Block_Diagram.png
+├── sim/
+│   └── alarm_clock_top.v
+│   └── clk_en_tb.v
+│   └── debouncer_tb.v
+│   └──display_driver.v
 ```
 
 ---
