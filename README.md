@@ -97,18 +97,18 @@ simulation window.
 
 **Test sequence:**
 
-a) **Reset (0–20 ns):** `rst` is held high. Both `count` and `ena` are forced to
-   `0`. No pulse is produced during this period.
+   a) **Reset (0–20 ns):** `rst` is held high. Both `count` and `ena` are forced to
+      `0`. No pulse is produced during this period.
+   
+   b) **First pulse (~120 ns):** After reset is released, `count` increments on every
+      rising edge of `clk`. When it reaches `MAX = 9`, `ena` goes high for exactly
+      one clock cycle (10 ns), then returns to `0` and `count` resets to `0`.
+   
+   c) **Subsequent pulses:** The pattern repeats every 10 clock cycles (~100 ns),
+      confirming that the period is correct and the pulse width is always exactly
+      1 cycle regardless of how long the simulation runs.
 
-b) **First pulse (~120 ns):** After reset is released, `count` increments on every
-   rising edge of `clk`. When it reaches `MAX = 9`, `ena` goes high for exactly
-   one clock cycle (10 ns), then returns to `0` and `count` resets to `0`.
-
-c) **Subsequent pulses:** The pattern repeats every 10 clock cycles (~100 ns),
-   confirming that the period is correct and the pulse width is always exactly
-   1 cycle regardless of how long the simulation runs.
-
- 2) [debouncer.v](src/debouncer.v) /
+2) [debouncer.v](src/debouncer.v) /
     [debouncer_tb.v](sim/debouncer_tb.v)
     ![Block_diagram](images/debouncer_simulation.png)
 
@@ -121,23 +121,23 @@ can be observed within a 1000 ns simulation window.
 
 **Test sequence:**
 
-a) **Idle (0–100 ns):** `btn_in` is held low. No output is produced.
-
-b) **Test 1 — Bouncy press (~100–700 ns):** `btn_in` toggles rapidly five times
-   (30 ns high, 30 ns low each) to simulate mechanical bounce. The debouncer
-   resets its counter on every edge and suppresses all the glitches. Once
-   `btn_in` settles stably high and `STABLE` cycles pass, exactly one
-   `btn_out` pulse is emitted.
-
-c) **Test 2 — Clean press (~700–900 ns):** `btn_in` goes high immediately
-   without any bouncing and stays high for 500 ns. After `STABLE` cycles the
-   debouncer emits a single `btn_out` pulse, confirming normal operation for
-   a clean button press.
-
-d) **Test 3 — Short glitch (~900 ns):** `btn_in` goes high for only 20 ns,
-   which is shorter than the `STABLE` threshold. The counter never reaches
-   `STABLE` so `btn_out` remains low, confirming that brief glitches are
-   correctly ignored.
+   a) **Idle (0–100 ns):** `btn_in` is held low. No output is produced.
+   
+   b) **Test 1 — Bouncy press (~100–700 ns):** `btn_in` toggles rapidly five times
+      (30 ns high, 30 ns low each) to simulate mechanical bounce. The debouncer
+      resets its counter on every edge and suppresses all the glitches. Once
+      `btn_in` settles stably high and `STABLE` cycles pass, exactly one
+      `btn_out` pulse is emitted.
+   
+   c) **Test 2 — Clean press (~700–900 ns):** `btn_in` goes high immediately
+      without any bouncing and stays high for 500 ns. After `STABLE` cycles the
+      debouncer emits a single `btn_out` pulse, confirming normal operation for
+      a clean button press.
+   
+   d) **Test 3 — Short glitch (~900 ns):** `btn_in` goes high for only 20 ns,
+      which is shorter than the `STABLE` threshold. The counter never reaches
+      `STABLE` so `btn_out` remains low, confirming that brief glitches are
+      correctly ignored.
     
  3) [alarm_clock_top.v](src/alarm_clock_top.v) /
     [alarm_clock_top_tb.v](sim/alarm_clock_top_tb.v)
