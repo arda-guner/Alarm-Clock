@@ -97,14 +97,14 @@ simulation window.
 
 **Test sequence:**
 
-1. **Reset (0–20 ns):** `rst` is held high. Both `count` and `ena` are forced to
+a) **Reset (0–20 ns):** `rst` is held high. Both `count` and `ena` are forced to
    `0`. No pulse is produced during this period.
 
-2. **First pulse (~120 ns):** After reset is released, `count` increments on every
+b) **First pulse (~120 ns):** After reset is released, `count` increments on every
    rising edge of `clk`. When it reaches `MAX = 9`, `ena` goes high for exactly
    one clock cycle (10 ns), then returns to `0` and `count` resets to `0`.
 
-3. **Subsequent pulses:** The pattern repeats every 10 clock cycles (~100 ns),
+c) **Subsequent pulses:** The pattern repeats every 10 clock cycles (~100 ns),
    confirming that the period is correct and the pulse width is always exactly
    1 cycle regardless of how long the simulation runs.
 
