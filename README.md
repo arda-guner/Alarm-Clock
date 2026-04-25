@@ -88,16 +88,35 @@ alarm_clock/
  1) [clk_en.v](src/clk_en.v) /
     [clk_en_tb.v](sim/clk_en_tb.v)
     ![Block_diagram](images/clk_en_tb.png)
+    
+    ### Description
+The testbench verifies that `clk_en` generates a single-cycle `ena` pulse at the
+correct frequency. The simulation uses a reduced `MAX = 9` (instead of
+`100_000_000 - 1`) so that the 1 Hz behaviour can be observed within a 500 ns
+simulation window.
 
- 2) [debouncer.v](src/debouncer.v) /
+**Test sequence:**
+
+1. **Reset (0–20 ns):** `rst` is held high. Both `count` and `ena` are forced to
+   `0`. No pulse is produced during this period.
+
+2. **First pulse (~120 ns):** After reset is released, `count` increments on every
+   rising edge of `clk`. When it reaches `MAX = 9`, `ena` goes high for exactly
+   one clock cycle (10 ns), then returns to `0` and `count` resets to `0`.
+
+3. **Subsequent pulses:** The pattern repeats every 10 clock cycles (~100 ns),
+   confirming that the period is correct and the pulse width is always exactly
+   1 cycle regardless of how long the simulation runs.
+
+ 3) [debouncer.v](src/debouncer.v) /
     [debouncer_tb.v](sim/debouncer_tb.v)
     ![Block_diagram](images/debouncer_simulation.png)
     
- 3) [alarm_clock_top.v](src/alarm_clock_top.v) /
+ 4) [alarm_clock_top.v](src/alarm_clock_top.v) /
     [alarm_clock_top_tb.v](sim/alarm_clock_top_tb.v)
 ![Block_diagram](images/alarm_clock_top_simulation.png)
 
- 4) [display_driver.v](src/display_driver.v) /
+ 5) [display_driver.v](src/display_driver.v) /
     [display_driver_tb.v](sim/display_driver_tb.v)
 ![Block_diagram](images/display_driver_simulation.png)
 
