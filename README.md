@@ -183,4 +183,40 @@ f) **Test 6 — SS rollover (~17–25 µs):** The FSM enters set-time mode and `
  5) [display_driver.v](src/display_driver.v) /
     [display_driver_tb.v](sim/display_driver_tb.v)
 ![Block_diagram](images/display_driver_simulation.png)
+### Description
+
+The testbench verifies that the display driver correctly multiplexes all 8
+digits, activates exactly one anode at a time, and produces the correct
+7-segment encoding for each BCD digit. The `refresh_count` register uses its
+default 4-bit width so digit switching happens every 16 clock cycles, making
+the full scan visible within the simulation window.
+
+**Test sequence:**
+
+a) **Test 1 — Show 12:34:56 (0–~2 µs):** `digits` is loaded with the BCD
+   encoding of `12:34:56`. After 200 clock cycles the driver has scanned
+   through all active digit positions. `AN` cycles through each anode and
+   `SEG` outputs the correct 7-segment pattern for each corresponding digit.
+
+b) **Test 2 — All zeros (~2–4 µs):** `digits` is set to `0x00000000`.
+   Every digit position displays `0`, so `SEG` consistently outputs
+   `7'b1000000` on each active anode, confirming the decoder handles the
+   zero case correctly across all positions.
+
+c) **Test 3 — All nines (~4–6 µs):** `digits` is loaded with `99:99:99`.
+   `SEG` outputs `7'b0010000` for every active digit, verifying that the
+   value `9` is encoded correctly and that the pattern holds uniformly across
+   all eight positions.
+
+d) **Test 4 — Single anode check (~6 µs):** At a single snapshot in time,
+   `AN` is checked to confirm that exactly one bit is low while all others
+   remain high. This verifies that the multiplexer never enables two digits
+   simultaneously, which would cause display ghosting on real hardware.
+
+e) **Test 5 — All 8 digit positions (~6–10 µs):** `digits` is loaded with
+   `1` through `8` across all eight nibbles. The testbench samples `AN` and
+   `SEG` every 50 clock cycles, stepping through each position in turn. Each
+   sample confirms that the active anode matches the expected digit index and
+   that `SEG` decodes to the correct value, verifying the full scan cycle
+   from digit 7 down to digit 0.
 
