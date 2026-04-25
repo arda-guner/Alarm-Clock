@@ -151,31 +151,31 @@ without waiting for the real clock divider.
 
 **Test sequence:**
 
-1. **Test 1 — Normal ticking (0–~1 µs):** Three `ena` pulses are applied while
+a) **Test 1 — Normal ticking (0–~1 µs):** Three `ena` pulses are applied while
    the FSM is in normal mode. `SS` increments from `0` to `3`, confirming that
    the time counter advances correctly on each tick.
 
-2. **Test 2 — Set time to 01:30:00 (~1–10 µs):** `btn_mode` is pressed once to
+b) **Test 2 — Set time to 01:30:00 (~1–10 µs):** `btn_mode` is pressed once to
    enter set-time mode. `btn_inc` is pressed once to set `HH = 1`, then
    `btn_set` advances to the `MM` field where 30 presses set `MM = 30`. A
    further `btn_set` moves to `SS`, and 57 presses wrap it from `3` to `0`.
    Two `btn_mode` presses return the FSM to normal mode. The `digits` output
    settles at `01300000`, confirming the time was stored correctly.
 
-3. **Test 3 — Set alarm to 01:30 (~10–14 µs):** Two `btn_mode` presses advance
+c) **Test 3 — Set alarm to 01:30 (~10–14 µs):** Two `btn_mode` presses advance
    the FSM to set-alarm mode. `AHH` is set to `1` and `AMM` to `30` using
    `btn_inc` and `btn_set`. The FSM is then returned to normal mode.
 
-4. **Test 4 — Alarm trigger (~14–16 µs):** `sw_alarm` is raised to enable the
+d) **Test 4 — Alarm trigger (~14–16 µs):** `sw_alarm` is raised to enable the
    alarm. Since the current time is already `01:30:00` and matches the alarm
    set-point, one `ena` tick causes `alarm_trig` to go high and `LED` to
    output `0xFF`, confirming the trigger logic works correctly.
 
-5. **Test 5 — Silence alarm (~16–17 µs):** A single `btn_set` press clears
+e) **Test 5 — Silence alarm (~16–17 µs):** A single `btn_set` press clears
    `alarm_trig` back to `0` and `LED` returns to `0x00`, confirming the
    silence mechanism works.
 
-6. **Test 6 — SS rollover (~17–25 µs):** The FSM enters set-time mode and `SS`
+f) **Test 6 — SS rollover (~17–25 µs):** The FSM enters set-time mode and `SS`
    is manually set to `58`. Three subsequent `ena` ticks advance `SS` through
    `59`, then roll it over to `0` and increment `MM` by one, verifying the
    carry logic between seconds and minutes.
