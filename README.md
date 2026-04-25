@@ -645,5 +645,6 @@ module display_driver_tb;
         $finish;
     end
 endmodule
+```
 ![Block_diagram](images/display_driver_simulation.png)
 
