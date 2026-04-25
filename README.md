@@ -111,6 +111,33 @@ c) **Subsequent pulses:** The pattern repeats every 10 clock cycles (~100 ns),
  2) [debouncer.v](src/debouncer.v) /
     [debouncer_tb.v](sim/debouncer_tb.v)
     ![Block_diagram](images/debouncer_simulation.png)
+
+### Description
+
+The testbench verifies that the debouncer filters out mechanical button bounce
+and only emits a single-cycle `btn_out` pulse after the input has been stable
+for `STABLE` clock cycles. A reduced `STABLE = 20` is used so the behaviour
+can be observed within a 1000 ns simulation window.
+
+**Test sequence:**
+
+a) **Idle (0–100 ns):** `btn_in` is held low. No output is produced.
+
+b) **Test 1 — Bouncy press (~100–700 ns):** `btn_in` toggles rapidly five times
+   (30 ns high, 30 ns low each) to simulate mechanical bounce. The debouncer
+   resets its counter on every edge and suppresses all the glitches. Once
+   `btn_in` settles stably high and `STABLE` cycles pass, exactly one
+   `btn_out` pulse is emitted.
+
+c) **Test 2 — Clean press (~700–900 ns):** `btn_in` goes high immediately
+   without any bouncing and stays high for 500 ns. After `STABLE` cycles the
+   debouncer emits a single `btn_out` pulse, confirming normal operation for
+   a clean button press.
+
+d) **Test 3 — Short glitch (~900 ns):** `btn_in` goes high for only 20 ns,
+   which is shorter than the `STABLE` threshold. The counter never reaches
+   `STABLE` so `btn_out` remains low, confirming that brief glitches are
+   correctly ignored.
     
  3) [alarm_clock_top.v](src/alarm_clock_top.v) /
     [alarm_clock_top_tb.v](sim/alarm_clock_top_tb.v)
