@@ -130,58 +130,7 @@ alarm_clock/
 ---
 ## Design sources and testbenches
  1) clk_en.v
-```verilog
-
-// clk_en.v
-// Generates a 1-cycle-wide enable pulse at 1Hz from 100MHz clock
-module clk_en (
-    input  wire clk,
-    input  wire rst,
-    output reg  ena
-);
-    // 100MHz / 100_000_000 = 1Hz
-    localparam MAX = 100_000_000 - 1; //9 is simulation value, the one which must be is this -> 100_000_000 - 1
-    reg [26:0] count;   //3 is simulation value, the one which must be is this -> 26
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            count <= 0;
-            ena   <= 0;
-        end else if (count == MAX) begin
-            count <= 0;
-            ena   <= 1;
-        end else begin
-            count <= count + 1;
-            ena   <= 0;
-        end
-    end
-
-endmodule
-```
-clk_en_tb.v
-```verilog
-// clk_en_tb.v
-`timescale 1ns/1ps
-module clk_en_tb;
-    reg clk, rst;
-    wire ena;
-
-    // Use fast MAX in clk_en (change localparam MAX to 9 for simulation)
-    clk_en uut (.clk(clk), .rst(rst), .ena(ena));
-
-    initial clk = 0;
-    always #5 clk = ~clk;   // 100MHz
-
-    initial begin
-        rst = 1; #20;
-        rst = 0;
-        #200;               // the value was 200 but we made it 500 to extend the duration of the simulation
-        $finish;
-    end
-
-    initial $monitor("t=%0t  ena=%b", $time, ena);
-endmodule
-```
+[clk_en.v](src/clk_en.v)
 ![Block_diagram](images/clk_en_tb.png)
  2) debouncer.v
 ```verilog
