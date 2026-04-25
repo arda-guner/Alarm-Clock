@@ -129,7 +129,7 @@ alarm_clock/
 
 ---
 ## Design sources and testbenches
- 1) [clk_en.v](src/clk_en.v)
+ 1) [clk_en.v](src/clk_en.v) /
     [clk_en_tb.v](sim/clk_en_tb.v)
 ![Block_diagram](images/clk_en_tb.png)
  3) debouncer.v
