@@ -57,8 +57,6 @@ When the alarm time is reached, the buzzer sounds and the LEDs light up.
 ## Pin Constraints (XDC)
 
  [Nexys A7-50T](constraints/nexys)
----
-
 
 
 ## Repository Structure
