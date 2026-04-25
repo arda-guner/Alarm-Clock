@@ -499,6 +499,7 @@ module alarm_clock_top_tb;
                      alarm_trig, LED);
 endmodule
 ```
+![Block_diagram](images/alarm_clock_top_simulation.png)
 4) display_driver.v
 ```verilog
 // display_driver.v
@@ -644,5 +645,5 @@ module display_driver_tb;
         $finish;
     end
 endmodule
-
+![Block_diagram](images/display_driver_simulation.png)
 
