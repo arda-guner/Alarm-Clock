@@ -108,15 +108,15 @@ c) **Subsequent pulses:** The pattern repeats every 10 clock cycles (~100 ns),
    confirming that the period is correct and the pulse width is always exactly
    1 cycle regardless of how long the simulation runs.
 
- 3) [debouncer.v](src/debouncer.v) /
+ 2) [debouncer.v](src/debouncer.v) /
     [debouncer_tb.v](sim/debouncer_tb.v)
     ![Block_diagram](images/debouncer_simulation.png)
     
- 4) [alarm_clock_top.v](src/alarm_clock_top.v) /
+ 3) [alarm_clock_top.v](src/alarm_clock_top.v) /
     [alarm_clock_top_tb.v](sim/alarm_clock_top_tb.v)
 ![Block_diagram](images/alarm_clock_top_simulation.png)
 
- 5) [display_driver.v](src/display_driver.v) /
+ 4) [display_driver.v](src/display_driver.v) /
     [display_driver_tb.v](sim/display_driver_tb.v)
 ![Block_diagram](images/display_driver_simulation.png)
 
