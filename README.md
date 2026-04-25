@@ -135,7 +135,7 @@ alarm_clock/
 
  2) [debouncer.v](src/debouncer.v) /
     [debouncer_tb.v](sim/debouncer_tb.v)
-    ![Block_diagram](images/debouncer_simulation.png
+    ![Block_diagram](images/debouncer_simulation.png)
     
  3) [alarm_clock_top.v](src/alarm_clock_top.v) /
     [alarm_clock_top_tb.v](sim/alarm_clock_top_tb.v)
