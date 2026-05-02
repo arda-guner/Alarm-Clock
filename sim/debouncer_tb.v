@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module debounce_tb ();
+module debouncer_tb ();
 
     // Testbench signals
     reg  clk;
