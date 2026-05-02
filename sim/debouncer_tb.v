@@ -57,8 +57,8 @@ module debouncer_tb ();
 
     // VCD waveform dump for GTKWave
     initial begin
-        $dumpfile("debounce.vcd");
-        $dumpvars(0, debounce_tb);
+        $dumpfile("debouncer.vcd");
+        $dumpvars(0, debouncer_tb);
     end
 
 endmodule
