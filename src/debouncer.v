@@ -19,7 +19,7 @@
 
 `timescale 1ns/1ps
 
-module debounce (
+module debouncer (
     input  wire clk,    // Main clock
     input  wire rst,    // High-active synchronous reset
     input  wire pin,    // Raw push-button input (may contain bounce)
