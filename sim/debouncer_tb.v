@@ -10,7 +10,7 @@ module debouncer_tb ();
     wire press;
 
     // Instantiate Device Under Test (DUT)
-    debounce dut (
+    debouncer dut (
         .clk  (clk),
         .rst  (rst),
         .pin  (pin),
