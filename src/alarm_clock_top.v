@@ -11,7 +11,8 @@ module alarm_clock_top (
     output wire [7:0]  AN,
     output wire [6:0]  SEG,
     output reg  [7:0]  LED,
-    output wire        AUD_PWM
+    output wire        AUD_PWM,
+    output wire        AUD_SD
 );
 
     //------------------------------------------------------------
@@ -288,7 +289,7 @@ module alarm_clock_top (
     end
 
     //------------------------------------------------------------
-    // Alarm outputs
+    // Alarm LEDs
     //------------------------------------------------------------
     always @(posedge clk) begin
         if (rst)
@@ -297,7 +298,21 @@ module alarm_clock_top (
             LED <= alarm_active ? 8'hFF : 8'h00;
     end
 
-    assign AUD_PWM = alarm_active;
+    //------------------------------------------------------------
+    // Buzzer / audio PWM output
+    //------------------------------------------------------------
+    buzzer_pwm #(
+        .CLK_FREQ(100_000_000),
+        .BUZZ_FREQ(2000)
+    ) buzzer_inst (
+        .clk   (clk),
+        .rst   (rst),
+        .enable(alarm_active),
+        .pwm   (AUD_PWM)
+    );
+
+    // Enable onboard audio circuit
+    assign AUD_SD = 1'b1;
 
     //------------------------------------------------------------
     // BCD digits for HH:MM:SS
