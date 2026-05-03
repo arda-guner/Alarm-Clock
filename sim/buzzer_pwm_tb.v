@@ -5,14 +5,15 @@ module buzzer_pwm_tb;
     reg clk;
     reg rst;
     reg enable;
-    wire pwm;
+    wire buzzer;
 
     //------------------------------------------------------------
     // DUT
-    // For simulation:
+    // Simulation parameters are reduced for fast waveform view.
+    //
     // CLK_FREQ  = 100
     // BUZZ_FREQ = 10
-    // HALF_PERIOD = 100 / (2*10) = 5 clock cycles
+    // HALF_PERIOD = 100 / (2 * 10) = 5 clock cycles
     //------------------------------------------------------------
     buzzer_pwm #(
         .CLK_FREQ(100),
@@ -21,36 +22,39 @@ module buzzer_pwm_tb;
         .clk   (clk),
         .rst   (rst),
         .enable(enable),
-        .pwm   (pwm)
+        .buzzer(buzzer)
     );
 
     //------------------------------------------------------------
-    // Clock generation
+    // Clock generation: 10 ns period
     //------------------------------------------------------------
     initial clk = 1'b0;
     always #5 clk = ~clk;
 
     integer toggle_count;
-    reg prev_pwm;
+    reg prev_buzzer;
 
     //------------------------------------------------------------
-    // Count PWM toggles
+    // Count buzzer toggles
     //------------------------------------------------------------
     always @(posedge clk) begin
         if (rst) begin
-            prev_pwm     <= 1'b0;
             toggle_count <= 0;
+            prev_buzzer  <= 1'b0;
         end
         else begin
-            if (pwm !== prev_pwm) begin
+            if (buzzer !== prev_buzzer) begin
                 toggle_count <= toggle_count + 1;
-                $display("PWM toggle at time %0t, pwm=%b", $time, pwm);
+                $display("Buzzer toggle at time %0t, buzzer=%b", $time, buzzer);
             end
 
-            prev_pwm <= pwm;
+            prev_buzzer <= buzzer;
         end
     end
 
+    //------------------------------------------------------------
+    // Stimulus
+    //------------------------------------------------------------
     initial begin
         $dumpfile("buzzer_pwm_tb.vcd");
         $dumpvars(0, buzzer_pwm_tb);
@@ -58,7 +62,7 @@ module buzzer_pwm_tb;
         rst = 1'b1;
         enable = 1'b0;
         toggle_count = 0;
-        prev_pwm = 1'b0;
+        prev_buzzer = 1'b0;
 
         //--------------------------------------------------------
         // Reset
@@ -67,8 +71,8 @@ module buzzer_pwm_tb;
         rst = 1'b0;
         repeat (5) @(posedge clk);
 
-        if (pwm !== 1'b0) begin
-            $display("FAIL: pwm should be 0 when disabled.");
+        if (buzzer !== 1'b0) begin
+            $display("FAIL: buzzer should be 0 after reset while disabled.");
             $finish;
         end
 
@@ -76,43 +80,41 @@ module buzzer_pwm_tb;
         // Enable buzzer
         //--------------------------------------------------------
         enable = 1'b1;
-
         repeat (40) @(posedge clk);
 
         if (toggle_count < 6) begin
-            $display("FAIL: pwm did not toggle enough. toggle_count=%0d", toggle_count);
+            $display("FAIL: buzzer did not toggle enough. toggle_count=%0d", toggle_count);
             $finish;
         end
 
-        $display("PASS: pwm toggles when enable is high.");
+        $display("PASS: buzzer toggles correctly when enable is high.");
 
         //--------------------------------------------------------
         // Disable buzzer
         //--------------------------------------------------------
         enable = 1'b0;
-        repeat (5) @(posedge clk);
+        repeat (10) @(posedge clk);
 
-        if (pwm !== 1'b0) begin
-            $display("FAIL: pwm should return to 0 when disabled.");
+        if (buzzer !== 1'b0) begin
+            $display("FAIL: buzzer should return to 0 when disabled.");
             $finish;
         end
 
-        $display("PASS: pwm returns to 0 when disabled.");
+        $display("PASS: buzzer returns to 0 when disabled.");
 
         //--------------------------------------------------------
         // Re-enable buzzer
         //--------------------------------------------------------
         toggle_count = 0;
         enable = 1'b1;
+        repeat (30) @(posedge clk);
 
-        repeat (25) @(posedge clk);
-
-        if (toggle_count < 3) begin
-            $display("FAIL: pwm did not restart after re-enable.");
+        if (toggle_count < 4) begin
+            $display("FAIL: buzzer did not restart after re-enable. toggle_count=%0d", toggle_count);
             $finish;
         end
 
-        $display("PASS: pwm restarts correctly after re-enable.");
+        $display("PASS: buzzer restarts correctly after re-enable.");
 
         $display("========================================");
         $display("ALL buzzer_pwm TESTS PASSED.");
@@ -121,4 +123,4 @@ module buzzer_pwm_tb;
         $finish;
     end
 
-endmodule 
+endmodule
