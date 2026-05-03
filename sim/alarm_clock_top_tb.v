@@ -12,8 +12,7 @@ module alarm_clock_top_tb;
     wire [7:0] AN;
     wire [6:0] SEG;
     wire [7:0] LED;
-    wire AUD_PWM;
-    wire AUD_SD;
+    wire BUZZER;
 
     //------------------------------------------------------------
     // DUT
@@ -28,8 +27,7 @@ module alarm_clock_top_tb;
         .AN(AN),
         .SEG(SEG),
         .LED(LED),
-        .AUD_PWM(AUD_PWM),
-        .AUD_SD(AUD_SD)
+        .BUZZER(BUZZER)
     );
 
     //------------------------------------------------------------
@@ -40,8 +38,7 @@ module alarm_clock_top_tb;
 
     //------------------------------------------------------------
     // Internal forced clean pulses
-    // Debounce is tested separately, so top-level TB drives clean
-    // button pulses directly.
+    // Debounce module is tested separately.
     //------------------------------------------------------------
     task pulse_tick;
         begin
@@ -144,35 +141,32 @@ module alarm_clock_top_tb;
     endfunction
 
     //------------------------------------------------------------
-    // Buzzer PWM check helper
+    // Buzzer PWM check
+    // Real parameters: 100 MHz and 2 kHz -> toggle every 25,000 clocks.
     //------------------------------------------------------------
     task check_buzzer_toggles_when_alarm_active;
-        integer i;
+        integer j;
         integer toggle_count;
-        reg prev_pwm;
+        reg prev_buzzer;
         begin
             toggle_count = 0;
-            prev_pwm = AUD_PWM;
+            prev_buzzer = BUZZER;
 
-            // HALF_PERIOD = 100_000_000 / (2*2000) = 25_000 clock cycles.
-            // One full period is 50_000 cycles. We observe long enough to see toggles.
-            for (i = 0; i < 80000; i = i + 1) begin
+            for (j = 0; j < 80000; j = j + 1) begin
                 @(posedge clk);
-                if (AUD_PWM !== prev_pwm) begin
+                if (BUZZER !== prev_buzzer) begin
                     toggle_count = toggle_count + 1;
-                    prev_pwm = AUD_PWM;
+                    prev_buzzer = BUZZER;
                 end
             end
 
             if (toggle_count < 2) begin
-                $display("FAIL: AUD_PWM did not toggle enough while alarm was active. toggle_count=%0d",
+                $display("FAIL: BUZZER did not toggle enough while alarm was active. toggle_count=%0d",
                          toggle_count);
                 $finish;
             end
-            else begin
-                $display("PASS: buzzer PWM toggles while alarm is active. toggle_count=%0d",
-                         toggle_count);
-            end
+
+            $display("PASS: BUZZER toggles while alarm is active. toggle_count=%0d", toggle_count);
         end
     endtask
 
@@ -206,13 +200,8 @@ module alarm_clock_top_tb;
         check_time(6'd0, 6'd0, 6'd0);
         check_alarm_time(6'd0, 6'd0);
 
-        if (AUD_SD !== 1'b1) begin
-            $display("FAIL: AUD_SD should be 1 to enable onboard audio.");
-            $finish;
-        end
-
-        if (AUD_PWM !== 1'b0) begin
-            $display("FAIL: AUD_PWM should be 0 after reset.");
+        if (BUZZER !== 1'b0) begin
+            $display("FAIL: BUZZER should be 0 after reset.");
             $finish;
         end
 
@@ -275,10 +264,9 @@ module alarm_clock_top_tb;
 
         sw_alarm = 1'b1;
 
-        // At this moment time is 01:30:00 and alarm is 01:30.
+        // Current time 01:30:00, alarm 01:30.
         pulse_tick();
 
-        // LED is registered separately, wait one extra clock for LED update.
         @(posedge clk);
         #1;
 
@@ -297,7 +285,7 @@ module alarm_clock_top_tb;
         //--------------------------------------------------------
         // Test 5: buzzer PWM output
         //--------------------------------------------------------
-        check_buzzer_toggles_when_alarm_active;
+        check_buzzer_toggles_when_alarm_active();
 
         //--------------------------------------------------------
         // Test 6: silence alarm
@@ -317,12 +305,11 @@ module alarm_clock_top_tb;
             $finish;
         end
 
-        // Give buzzer one clock to settle low after disable
         @(posedge clk);
         #1;
 
-        if (AUD_PWM !== 1'b0) begin
-            $display("FAIL: AUD_PWM should return to 0 after alarm is silenced.");
+        if (BUZZER !== 1'b0) begin
+            $display("FAIL: BUZZER should return to 0 after alarm is silenced.");
             $finish;
         end
 
