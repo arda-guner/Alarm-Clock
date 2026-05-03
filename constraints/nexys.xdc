@@ -2,6 +2,7 @@
 ## Nexys A7-50T Constraints for Alarm Clock Project
 ## Top module: alarm_clock_top
 ## Board: Nexys A7-50T
+## External buzzer: Pmod JA1
 ## ============================================================
 
 
@@ -110,14 +111,23 @@ set_property -dict { PACKAGE_PIN U13 IOSTANDARD LVCMOS33 } [get_ports { AN[7] }]
 
 
 ## ============================================================
-## Audio output
+## External buzzer output
 ##
-## AUD_PWM = buzzer/audio PWM signal
-## AUD_SD  = onboard audio enable / shutdown control
+## BUZZER = external buzzer signal connected to Pmod JA1
+## JA1 FPGA pin = C17
+##
+## Wiring:
+## Passive piezo buzzer:
+##   BUZZER/+ -> JA1
+##   GND/-    -> Pmod GND
+##
+## Active buzzer module:
+##   SIG -> JA1
+##   VCC -> Pmod 3.3V
+##   GND -> Pmod GND
 ## ============================================================
 
-set_property -dict { PACKAGE_PIN A11 IOSTANDARD LVCMOS33 } [get_ports { AUD_PWM }]
-set_property -dict { PACKAGE_PIN D12 IOSTANDARD LVCMOS33 } [get_ports { AUD_SD }]
+set_property -dict { PACKAGE_PIN C17 IOSTANDARD LVCMOS33 } [get_ports { BUZZER }]
 
 
 ## ============================================================
