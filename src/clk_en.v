@@ -1,25 +1,48 @@
+// -----------------------------------------------------------
+//! @brief Clock enable generator (single-cycle pulse)
+//! @version 2.1
+//! @copyright (c) 2019-2026 Tomas Fryza, MIT license
+//!
+//! This design generates a single-clock-cycle enable pulse
+//! every MAX clock cycles.
+//
+// Notes:
+// - Synchronous design (positive edge of clk)
+// - High-active synchronous reset
+// - Output pulse width = one clock period
+// - MAX must be greater than 0
+// -----------------------------------------------------------
 
-// clk_en.v
-// Generates a 1-cycle-wide enable pulse at 1Hz from 100MHz clock
-module clk_en (
-    input  wire clk,
-    input  wire rst,
-    output reg  ena
+`timescale 1ns/1ps
+
+module clk_en #(
+    // #() after a module name introduces a parameter list
+    parameter MAX = 4  //! Number of clock cycles between pulses
+)(
+    input  wire clk,  //! Main clock
+    input  wire rst,  //! High-active synchronous reset
+    output reg  ce    //! One-clock-cycle enable pulse
 );
-    // 100MHz / 100_000_000 = 1Hz
-    localparam MAX = 100_000_000 - 1; //9 is simulation value, the one which must be is this -> 100_000_000 - 1
-    reg [26:0] count;   //3 is simulation value, the one which must be is this -> 26
 
-    always @(posedge clk or posedge rst) begin
+    // Internal counter
+    reg [$clog2(MAX)-1:0] cnt;
+    // $clog2(MAX) -- Ceiling of log2(x) returns the minimum
+    // number of bits required
+
+    //! Clocked, sequential process, triggered when `clk`
+    //! rises from 0 to 1 (positive edge of a signal)
+    always @(posedge clk) begin
         if (rst) begin
-            count <= 0;
-            ena   <= 0;
-        end else if (count == MAX) begin
-            count <= 0;
-            ena   <= 1;
-        end else begin
-            count <= count + 1;
-            ena   <= 0;
+            ce  <= 1'b0;  // Reset output
+            cnt <= 0;     // Reset internal counter
+        end
+        else if (cnt == MAX-1) begin
+            ce  <= 1'b1;  // Generate one-cycle pulse
+            cnt <= 0;     // Reset internal counter
+        end
+        else begin
+            ce   <= 1'b0;        // Clear output
+            cnt  <= cnt + 1'b1;  // Increment internal counter
         end
     end
 
