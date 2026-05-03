@@ -32,7 +32,7 @@ module debounce (
     // Constants (internal)
     //------------------------------------------------------------
     localparam SHIFT_LEN = 4;  // Debounce history
-    localparam MAX       = 2;  // Sampling period
+    localparam MAX       = 200_000;  // Sampling period
                                // 2 for simulation
                                // 200_000 (2 ms) for implementation !!!
 
