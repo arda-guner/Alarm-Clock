@@ -50,6 +50,7 @@ module alarm_clock_top (
 
     //------------------------------------------------------------
     // Debounced button pulses
+    // Uses laboratory debounce module without parameter override.
     //------------------------------------------------------------
     wire btn_set_state;
     wire btn_inc_state;
@@ -59,9 +60,7 @@ module alarm_clock_top (
     wire btn_inc_press;
     wire btn_mode_press;
 
-    debounce #(
-        .DEBOUNCE_MAX(200_000)
-    ) debounce_set_inst (
+    debounce debounce_set_inst (
         .clk  (clk),
         .rst  (rst),
         .pin  (raw_set),
@@ -69,9 +68,7 @@ module alarm_clock_top (
         .press(btn_set_press)
     );
 
-    debounce #(
-        .DEBOUNCE_MAX(200_000)
-    ) debounce_inc_inst (
+    debounce debounce_inc_inst (
         .clk  (clk),
         .rst  (rst),
         .pin  (raw_inc),
@@ -79,9 +76,7 @@ module alarm_clock_top (
         .press(btn_inc_press)
     );
 
-    debounce #(
-        .DEBOUNCE_MAX(200_000)
-    ) debounce_mode_inst (
+    debounce debounce_mode_inst (
         .clk  (clk),
         .rst  (rst),
         .pin  (raw_mode),
