@@ -1,21 +1,55 @@
-// clk_en_tb.v
 `timescale 1ns/1ps
+
 module clk_en_tb;
-    reg clk, rst;
-    wire ena;
 
-    // Use fast MAX in clk_en (change localparam MAX to 9 for simulation)
-    clk_en uut (.clk(clk), .rst(rst), .ena(ena));
+    reg clk;
+    reg rst;
+    wire ce;
 
-    initial clk = 0;
-    always #5 clk = ~clk;   // 100MHz
+    // For simulation: MAX = 10
+    clk_en #(
+        .MAX(10)
+    ) dut (
+        .clk(clk),
+        .rst(rst),
+        .ce (ce)
+    );
+
+    initial clk = 1'b0;
+    always #5 clk = ~clk;   // 100 MHz clock, 10 ns period
+
+    integer pulse_count;
+    integer cycle_count;
 
     initial begin
-        rst = 1; #20;
-        rst = 0;
-        #200;               // the value was 200 but we made it 500 to extend the duration of the simulation
+        $dumpfile("clk_en_tb.vcd");
+        $dumpvars(0, clk_en_tb);
+
+        rst = 1'b1;
+        pulse_count = 0;
+        cycle_count = 0;
+
+        repeat (3) @(posedge clk);
+        rst = 1'b0;
+
+        repeat (50) begin
+            @(posedge clk);
+            cycle_count = cycle_count + 1;
+
+            if (ce)
+                pulse_count = pulse_count + 1;
+        end
+
+        if (pulse_count >= 4) begin
+            $display("PASS: clk_en generated periodic one-clock enable pulses.");
+            $display("Pulse count = %0d", pulse_count);
+        end
+        else begin
+            $display("FAIL: clk_en did not generate enough pulses. Pulse count = %0d", pulse_count);
+            $finish;
+        end
+
         $finish;
     end
 
-    initial $monitor("t=%0t  ena=%b", $time, ena);
 endmodule
