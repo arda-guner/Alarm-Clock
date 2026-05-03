@@ -1,16 +1,17 @@
 `timescale 1ns/1ps
 
-module debouncer_tb ();
+module debounce_tb;
 
-    // Testbench signals
-    reg  clk;
-    reg  rst;
-    reg  pin;
+    reg clk;
+    reg rst;
+    reg pin;
+
     wire state;
     wire press;
 
-    // Instantiate Device Under Test (DUT)
-    debouncer dut (
+    debounce #(
+        .DEBOUNCE_MAX(2)
+    ) dut (
         .clk  (clk),
         .rst  (rst),
         .pin  (pin),
@@ -18,47 +19,58 @@ module debouncer_tb ();
         .press(press)
     );
 
-    // Clock generation: 10 ns period (100 MHz)
-    initial clk = 0;
+    initial clk = 1'b0;
     always #5 clk = ~clk;
 
-    // Testbench stimulus
+    integer press_count;
+
     initial begin
-        // Initialize
-        rst = 1;
-        pin = 0;
+        $dumpfile("debounce_tb.vcd");
+        $dumpvars(0, debounce_tb);
 
-        $display("\nStarting simulation...\n");
-        $display("Reset phase");
-        #50;
-        rst = 0;
+        rst = 1'b1;
+        pin = 1'b0;
+        press_count = 0;
 
-        #20;
-        $display("Simulate bouncing (fast toggling)");
-        pin = 1; #30;
-        pin = 0; #20;
-        pin = 1; #40;
-        pin = 0; #30;
-        pin = 1;  // Finally stable HIGH
-        #300;
+        repeat (5) @(posedge clk);
+        rst = 1'b0;
 
-        $display("Simulate button on release");
-        pin = 0; #30;
-        pin = 1; #20;
-        pin = 0; #40;
-        pin = 1; #30;
-        pin = 0;  // Finally stable LOW
-        #300;
+        //--------------------------------------------------------
+        // Test 1: bouncing input
+        //--------------------------------------------------------
+        pin = 1'b1; repeat (2) @(posedge clk);
+        pin = 1'b0; repeat (2) @(posedge clk);
+        pin = 1'b1; repeat (2) @(posedge clk);
+        pin = 1'b0; repeat (2) @(posedge clk);
+        pin = 1'b1; repeat (20) @(posedge clk); // finally stable high
 
-        // Finish simulation
-        $display("\nSimulation finished\n");
+        //--------------------------------------------------------
+        // Release
+        //--------------------------------------------------------
+        pin = 1'b0; repeat (20) @(posedge clk);
+
+        //--------------------------------------------------------
+        // Test 2: short glitch
+        //--------------------------------------------------------
+        pin = 1'b1; repeat (1) @(posedge clk);
+        pin = 1'b0; repeat (20) @(posedge clk);
+
+        if (press_count == 1) begin
+            $display("PASS: debounce generated exactly one press pulse and ignored short glitch.");
+        end
+        else begin
+            $display("FAIL: expected 1 press pulse, got %0d", press_count);
+            $finish;
+        end
+
         $finish;
- end
+    end
 
-    // VCD waveform dump for GTKWave
-    initial begin
-        $dumpfile("debouncer.vcd");
-        $dumpvars(0, debouncer_tb);
+    always @(posedge clk) begin
+        if (press) begin
+            press_count = press_count + 1;
+            $display("Press pulse detected at time %0t", $time);
+        end
     end
 
 endmodule
