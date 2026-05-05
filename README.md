@@ -20,7 +20,7 @@ The project follows a modular synchronous design style. The system uses the labo
 
 ## System Overview
 
-![Block diagram](images/Block_diagram.png)
+![Block diagram](images/block_diagram_of_alarm_clock.png)
 
 The alarm clock is built from the following main blocks:
 
