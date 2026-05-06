@@ -481,24 +481,19 @@ Verified behavior:
 
 ---
 
-## FPGA Implementation
+## FPGA Implementation & Demo Video
 
-The project is implemented on the Nexys A7-50T board using AMD Vivado 2025.2.
+
+The design was synthesized, implemented, and tested on the Digilent Nexys A7-50T FPGA board. A short demonstration video showing the implemented alarm clock system can be accessed from the link below:
+
+[Watch the FPGA Alarm Clock Demo Video](https://drive.google.com/file/d/1Ip6K3iLx0Ul9pQ4m5QgAsPLqSCCL0Y30/view?usp=sharing)
+
 
 Implementation files:
 
 - Top-level module: [`src/alarm_clock_top.v`](src/alarm_clock_top.v)
 - Constraint file: [`constraints/nexys.xdc`](constraints/nexys.xdc)
 
-
-
-## FPGA Implementation & Demo Video
-
-The design was synthesized, implemented, and tested on the Digilent Nexys A7-50T FPGA board.
-
-A short demonstration video showing the implemented alarm clock system can be accessed from the link below:
-
-[Watch the FPGA Alarm Clock Demo Video](https://drive.google.com/file/d/1Ip6K3iLx0Ul9pQ4m5QgAsPLqSCCL0Y30/view?usp=sharing)
 
 Vivado steps:
 
